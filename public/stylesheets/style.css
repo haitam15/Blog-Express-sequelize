@@ -1,0 +1,17 @@
+.back {
+  background-image: url('../images/background.jpg') !important;
+}
+
+.mgn {
+  margin-top: 60px;
+}
+
+.title {
+  font-weight: bolder;
+  color: rgb(180, 18, 18);
+  text-align: center;
+}
+
+.bttn {
+  margin-bottom: 20px;
+}
