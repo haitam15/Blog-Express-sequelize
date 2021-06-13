@@ -11,7 +11,6 @@ module.exports = {
      *   name: 'John Doe',
      *   isBetaMember: false
      * }], {});
-    */
    let users = [];
    let user = {id:undefined,username:undefined,email:undefined,password:undefined,role:undefined,createdAt:undefined,updatedAt:undefined};
    let r=["author","guest","admin"];
@@ -26,6 +25,7 @@ module.exports = {
    }
    var k = await queryInterface.bulkInsert('users',users,{});
    return Promise.all([k]);
+    */
   },
 
   down: async (queryInterface, Sequelize) => {
