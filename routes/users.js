@@ -21,14 +21,13 @@ router.get('/:id', async (req,res) => {
 
 router.post('/', async (req,res) => {
   try {
-    const {username,email} = req.body
-    if ( !username ) {
-      res.send("Username invalid !");
-    } else if ( !email ) {
+    const {email} = req.body
+    const isEmailValid = await usersRepo.getUserByEmail(email);
+    if ( isEmailValid ) {
       res.send("Email invalid !");
     } else {
       usersRepo.addUser(req.body);
-      user.send("User Added !");
+      res.send("User Added !");
     }
   } catch (err) { console.log(err.message) };
 });
@@ -36,17 +35,18 @@ router.post('/', async (req,res) => {
 router.put('/:id', async (req,res) => {
   try {
     const id = req.params.id ;
-    const [updated] = await usersRepo.updateUser(id,req.body);
-    const {username,email} = req.body
-    if ( !username ) {
-      res.send("Username invalid !");
-    } else if ( !email ) {
+    const {email} = req.body
+    const isEmailValid = await usersRepo.getUserByEmail(email);
+    if ( isEmailValid && isEmailValid.id!=id ) {
       res.send("Email invalid !");
-    } else if (updated) {
-      res.send('User updated !');
-    }
-    else {
-      res.send('User not found !');
+    } else {
+      const [updated] = await usersRepo.updateUser(id,req.body);
+      if (updated) {
+        res.send('User updated !');
+      }
+      else {
+        res.send('User not found !');
+      }
     }
   } catch (err) { console.log(err.message) };
 });

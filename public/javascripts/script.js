@@ -1,11 +1,12 @@
 const getUsers = document.getElementById("users");
 const getUser = document.getElementById("user");
 const deleteUser = document.getElementById("delete");
-const addUser = document.getElementById("add");
-const updateUser = document.getElementById("update");
+const addUser = document.getElementById("formAdd");
+const updateUser = document.getElementById("formUpdate");
 
 
 const parseUsers = () => {
+    document.getElementById("userUpdate").innerHTML = "";
     fetch("http://localhost:3000/users")
     .then( (res) => res.json() )
     .then( (data) => {
@@ -45,7 +46,10 @@ const parseUsers = () => {
 getUsers.addEventListener("click",parseUsers);
 
 const parseUser = () => {
+    document.getElementById("userUpdate").innerHTML = "";
     const id = document.getElementById("getId").value;
+    if (!id)
+        return;
     fetch(`http://localhost:3000/users/${id}`)
     .then( (res) => res.json() )
     .then( (data) => {
@@ -90,7 +94,10 @@ const parseUser = () => {
 getUser.addEventListener("click",parseUser);
 
 deleteUser.addEventListener("click",() => {
+    document.getElementById("userUpdate").innerHTML = "";
     const id = document.getElementById("deleteId").value;
+    if (!id)
+        return;
     fetch(`http://localhost:3000/users/${id}`,{method:'delete'}).then( (res)=> res.text() ).then( (data) => {
         document.getElementById("usersList").innerHTML = `
         <div class="row text-center mgn">
@@ -99,7 +106,9 @@ deleteUser.addEventListener("click",() => {
     } ).catch((err)=>console.log(err));
 })
 
-addUser.addEventListener('click',()=> {
+addUser.addEventListener('submit',(e)=> {
+    document.getElementById("userUpdate").innerHTML = "";
+    e.preventDefault();
     let username = document.getElementById('usernameAdd').value;
     let email = document.getElementById('emailAdd').value;
     let password = document.getElementById('passwordAdd').value;
@@ -112,10 +121,17 @@ addUser.addEventListener('click',()=> {
         },
         body:JSON.stringify({ username:username, email:email, password:password, role:role })
     })
-    .then((res)=>res.text()).then(data=>console.log(data)).catch(err=>console.log(err));
+    .then((res)=>res.text()).then( data => {
+        document.getElementById("usersList").innerHTML = `
+        <div class="row text-center mgn">
+            <h1>${data}</h1>
+        </div>`
+    }).catch(err=>console.log(err));
 });
 
-updateUser.addEventListener('click',()=> {
+updateUser.addEventListener('submit',(e)=> {
+    document.getElementById("usersList").innerHTML = "";
+    e.preventDefault();
     let id = document.getElementById('id').value;
     let username = document.getElementById('usernameUpdate').value;
     let email = document.getElementById('emailUpdate').value;
@@ -129,5 +145,10 @@ updateUser.addEventListener('click',()=> {
         },
         body:JSON.stringify({ username:username, email:email, password:password, role:role })
     })
-    .then((res)=>res.text()).then(data=>console.log(data)).catch(err=>console.log(err));
+    .then((res)=>res.text()).then( data => {
+        document.getElementById("userUpdate").innerHTML = `
+        <div class="row text-center mgn">
+            <h1>${data}</h1>
+        </div>`
+    }).catch(err=>console.log(err));
 });
