@@ -22,7 +22,7 @@ module.exports = {
     addArticle(article) {
         Article.create(article);
     },
-    updateArticle(id,arctile) {
+    updateArticle(id,article) {
         return Article.update(article, { where: { id: id } } );
     },
     deleteArticle(id) {
